@@ -3,16 +3,25 @@
 
 <main>
     <h1>Service Project Categories</h1>
-    <p>Explore the different ways you can serve your community.</p>
+
+    <p>
+        Explore the different ways you can serve your community.
+    </p>
 
     <section>
         <h2>Available Categories</h2>
-        <ul>
-            <li>Environmental</li>
-            <li>Educational</li>
-            <li>Community Service</li>
-            <li>Health and Wellness</li>
-        </ul>
+
+        <% if (categories && categories.length > 0) { %>
+            <ul>
+                <% categories.forEach(category => { %>
+                    <li>
+                        <%= category.name %>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>No categories are currently available.</p>
+        <% } %>
     </section>
 </main>
 

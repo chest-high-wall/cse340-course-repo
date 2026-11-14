@@ -3,11 +3,49 @@
 
 <main>
     <h1>Service Projects</h1>
-    <p>Discover opportunities to make a difference in your community.</p>
+
+    <p>
+        Discover opportunities to make a difference
+        in your community.
+    </p>
 
     <section>
         <h2>Available Service Projects</h2>
-        <p>Explore meaningful projects and find ways to volunteer.</p>
+
+        <p>
+            Explore meaningful projects and find
+            ways to volunteer.
+        </p>
+
+        <ul>
+            <% projects.forEach(project => { %>
+                <li>
+                    <h3><%= project.title %></h3>
+
+                    <p><%= project.description %></p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        <%= project.location %>
+                    </p>
+
+                    <p>
+                        <strong>Date:</strong>
+                        <%= new Date(project.date).toLocaleDateString('en-US', { timeZone: 'UTC' }) %>
+                    </p>
+                </li>
+            <% }) %>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Get Involved</h2>
+
+        <p>
+            Every act of service makes a difference.
+            Find a project that matches your interests
+            and start helping your community today!
+        </p>
     </section>
 </main>
 

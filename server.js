@@ -1,6 +1,9 @@
 
 import express from "express";
 import dotenv from "dotenv";
+import { getAllOrganizations } from "./src/models/organizations.js";
+import { getAllProjects } from "./src/models/projects.js";
+import { getAllCategories } from "./src/models/categories.js";
 
 dotenv.config();
 
@@ -18,19 +21,49 @@ app.get("/", (req, res) => {
   res.render("index", { title: "Home" });
 });
 
-// Organizations page
-app.get("/organizations", (req, res) => {
-  res.render("organizations", { title: "Organizations" });
+// Organizations page - Retrieve data from PostgreSQL
+app.get("/organizations", async (req, res) => {
+  try {
+    const organizations = await getAllOrganizations();
+
+    res.render("organizations", {
+      title: "Organizations",
+      organizations: organizations
+    });
+  } catch (error) {
+    console.error("Error loading organizations:", error);
+    res.status(500).send("Error loading organizations");
+  }
 });
 
-// Service projects page
-app.get("/projects", (req, res) => {
-  res.render("projects", { title: "Service Projects" });
+// Service projects page - Retrieve data from PostgreSQL
+app.get("/projects", async (req, res) => {
+  try {
+    const projects = await getAllProjects();
+
+    res.render("projects", {
+      title: "Service Projects",
+      projects: projects
+    });
+  } catch (error) {
+    console.error("Error loading projects:", error);
+    res.status(500).send("Error loading projects");
+  }
 });
 
-// Categories page
-app.get("/categories", (req, res) => {
-  res.render("categories", { title: "Categories" });
+// Categories page - Retrieve data from PostgreSQL
+app.get("/categories", async (req, res) => {
+  try {
+    const categories = await getAllCategories();
+
+    res.render("categories", {
+      title: "Categories",
+      categories: categories
+    });
+  } catch (error) {
+    console.error("Error loading categories:", error);
+    res.status(500).send("Error loading categories");
+  }
 });
 
 // Start the server

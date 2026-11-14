@@ -3,15 +3,60 @@
 
 <main>
     <h1>Our Organizations</h1>
-    <p>Meet the organizations making a difference in our communities.</p>
+
+    <p>
+        Meet the organizations making a difference
+        in our communities.
+    </p>
 
     <section>
         <h2>Community Partners</h2>
-        <p>Our network connects volunteers with organizations dedicated to serving others.</p>
 
-        <img src="/images/volunteers.jpg"
-             alt="Volunteers working together on a community project"
-             width="400">
+        <p>
+            Our network connects volunteers with
+            organizations dedicated to serving others.
+        </p>
+
+        <ul>
+            <% organizations.forEach(organization => { %>
+                <li>
+                    <% if (organization.logo_filename) { %>
+                        <img
+                            src="/images/<%= organization.logo_filename %>"
+                            alt="<%= organization.name %> logo"
+                            width="100"
+                        >
+                    <% } %>
+
+                    <h3><%= organization.name %></h3>
+
+                    <p><%= organization.description %></p>
+
+                    <p>
+                        Email:
+                        <a href="mailto:<%= organization.contact_email %>">
+                            <%= organization.contact_email %>
+                        </a>
+                    </p>
+                </li>
+            <% }) %>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Volunteer With Us</h2>
+
+        <p>
+            Join our community partners and help
+            make a difference through meaningful
+            service opportunities.
+        </p>
+
+        <img
+            src="/images/volunteers.jpg"
+            alt="Volunteers working together"
+            style="max-width: 100%; height: auto;"
+        >
     </section>
 </main>
 
