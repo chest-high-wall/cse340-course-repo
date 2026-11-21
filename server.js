@@ -1,69 +1,58 @@
 
 import express from "express";
 import dotenv from "dotenv";
-import { getAllOrganizations } from "./src/models/organizations.js";
-import { getAllProjects } from "./src/models/projects.js";
-import { getAllCategories } from "./src/models/categories.js";
+import router from "./src/routes.js";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
 
 // Set EJS as the template engine
 app.set("view engine", "ejs");
 
-// Serve static files from the public folder
+// Serve static files
 app.use(express.static("public"));
 
-// Home page
-app.get("/", (req, res) => {
-  res.render("index", { title: "Home" });
+// Log requests during development
+app.use((req, res, next) => {
+  if (NODE_ENV === "development") {
+    console.log(`${req.method} ${req.url}`);
+  }
+  next();
 });
 
-// Organizations page - Retrieve data from PostgreSQL
-app.get("/organizations", async (req, res) => {
-  try {
-    const organizations = await getAllOrganizations();
-
-    res.render("organizations", {
-      title: "Organizations",
-      organizations: organizations
-    });
-  } catch (error) {
-    console.error("Error loading organizations:", error);
-    res.status(500).send("Error loading organizations");
-  }
+// Make NODE_ENV available to EJS templates
+app.use((req, res, next) => {
+  res.locals.NODE_ENV = NODE_ENV;
+  next();
 });
 
-// Service projects page - Retrieve data from PostgreSQL
-app.get("/projects", async (req, res) => {
-  try {
-    const projects = await getAllProjects();
+// Use MVC routes
+app.use(router);
 
-    res.render("projects", {
-      title: "Service Projects",
-      projects: projects
-    });
-  } catch (error) {
-    console.error("Error loading projects:", error);
-    res.status(500).send("Error loading projects");
-  }
+// Handle pages that do not exist
+app.use((req, res, next) => {
+  const error = new Error("Page Not Found");
+  error.status = 404;
+  next(error);
 });
 
-// Categories page - Retrieve data from PostgreSQL
-app.get("/categories", async (req, res) => {
-  try {
-    const categories = await getAllCategories();
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error("Error occurred:", err);
 
-    res.render("categories", {
-      title: "Categories",
-      categories: categories
-    });
-  } catch (error) {
-    console.error("Error loading categories:", error);
-    res.status(500).send("Error loading categories");
-  }
+  const status = err.status || 500;
+
+  res.status(status).render(
+    status === 404 ? "errors/404" : "errors/500",
+    {
+      title: status === 404 ? "Page Not Found" : "Server Error",
+      error: NODE_ENV === "development" ? err.message : null,
+      stack: NODE_ENV === "development" ? err.stack : null
+    }
+  );
 });
 
 // Start the server

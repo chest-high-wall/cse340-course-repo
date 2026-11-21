@@ -28,7 +28,11 @@
                         >
                     <% } %>
 
-                    <h3><%= organization.name %></h3>
+                    <h3>
+                        <a href="/organization/<%= organization.organization_id %>">
+                            <%= organization.name %>
+                        </a>
+                    </h3>
 
                     <p><%= organization.description %></p>
 
